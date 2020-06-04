@@ -19,9 +19,9 @@ console.log(process.env.NODE_ENV, "process.env.NODE_ENV")
 module.exports = {
   // webpack 配置
   // 入口起点
-  entry: "./src/index.js",
+  entry: ["./src/index.js", "./src/index.html"], //html 只有一个 不需要 HMR 功能
   output: {
-    filename: "js/bundle.js",
+    filename: "js/bundle[name][chunkhash:10].js",
     path: path.resolve(__dirname, "build"),
   },
   module: {
@@ -50,29 +50,29 @@ module.exports = {
             css 兼容性处理 使用postcss-loader
             依赖了  postcss-loader  postcss-preset-env 两个库
           */
-          {
-            loader: "postcss-loader",
-            options: {
-              ident: "postcss",
-              plugins: () => {
-                //postcss 的插件
+          // {
+          //   loader: "postcss-loader",
+          //   options: {
+          //     ident: "postcss",
+          //     plugins: () => {
+          //       //postcss 的插件
 
-                // "browserslist": {
-                //   "development": [
-                //     "last 1 chrome version",
-                //     "last 1 firefox version",
-                //     "last 1 safari version"
-                //   ],
-                //   "production": [
-                //     "> 0.2%",
-                //     "not dead",
-                //     "not op_mini all"
-                //   ]
-                // }
-                require('postcss-preset-env')()
-              }
-            }
-          }
+          //       // "browserslist": {
+          //       //   "development": [
+          //       //     "last 1 chrome version",
+          //       //     "last 1 firefox version",
+          //       //     "last 1 safari version"
+          //       //   ],
+          //       //   "production": [
+          //       //     "> 0.2%",
+          //       //     "not dead",
+          //       //     "not op_mini all"
+          //       //   ]
+          //       // }
+          //       require('postcss-preset-env')()
+          //     }
+          //   }
+          // }
         ]
       },
       { // 注意是sass loader
@@ -168,6 +168,7 @@ module.exports = {
     port: 3000,
     hot: true,  // 样式文件可以使用 HMR 功能  因为 style-loader 内部实现了 所以development 最好使用style-loader 作为最后一个样式loader
     //  product 环境还是使用压缩css 的配置
+    // 但是 js 这个并不能热更新
   },
   optimization: {
     minimizer: [
@@ -181,6 +182,21 @@ module.exports = {
         }
       })
     ]
-  }
+  },
+  devtool: "eval-source-map",   //process.env.NODE_ENV === "development"
+  // devtool: "hidden-source-map",  //process.env.NODE_ENV === "production"
+  /*
+  source-map 打包后代码 可以 映射到源代码 适合调试
+  但是这样打包速度会变慢
+  [inline-|hidden-|eval-][nosources-][cheap-[modules-]]source-map
+
+  inline-source-map    //不在外部生产 map 文件 直接内联在 js 文件中只生成一个内联的source-map   构建速度更快
+  hidden-source-map    // 会生成外部的 map 文件
+  eval-source-map      // 也是内联 但是在每一个文件都生成 source-map  放到 eval函数中 
+
+  nosources-source-map   // 生成外部
+  ......
+
+  */
 };
 
