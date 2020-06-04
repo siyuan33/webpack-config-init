@@ -181,7 +181,10 @@ module.exports = {
           }
         }
       })
-    ]
+    ],
+    splitChunks: {   // 可以将node_modules 中的代码单独打包
+      chunks: "all",
+    }
   },
   devtool: "eval-source-map",   //process.env.NODE_ENV === "development"
   // devtool: "hidden-source-map",  //process.env.NODE_ENV === "production"
