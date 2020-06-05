@@ -161,6 +161,7 @@ module.exports = {
       chunkFilename: "[id].css"
     }),
     new OptimizeCSSAssetsPlugin({}),
+    // 要在入口js 中(index.js) 注册 serviceworker 同时还要处理兼容问题 老浏览器不支持 serviceworker
     new workboxWebpackPlugin.GenerateSW({  //PWA 插件
 
       //Whether or not the service worker should start controlling any existing clients as soon as it activates.
@@ -169,6 +170,7 @@ module.exports = {
       skipWaiting: true,
     })
   ],
+
 
   mode: "development",
   // mode : "production",

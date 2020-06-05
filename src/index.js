@@ -31,3 +31,18 @@ const add = (x, y) => {
   console.log(x + y)
 }
 add(2, 1)
+
+
+// 注册 serviceworker 
+// 处理兼容性问题 
+debugger
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async function callback () {
+    await navigator.serviceWorker.register("/service-worker.js")
+      .then(() => {
+        console.log("serviceWorker注册成功")
+      }).catch(() => { "serviceWorker注册失败" })
+
+    window.removeEventListener("load", callback)
+  })
+}
