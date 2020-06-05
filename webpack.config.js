@@ -116,27 +116,28 @@ module.exports = {
       //   // js 兼容性处理 babel-loader
       //   // 依赖 babel-loader   @babel/preset-env @babel/core
       //   // 依赖 corejs 去按需加载兼容的代码
-      //   test: /\.js$/,
-      //   exclude: /node_modules/i,
-      //   loader: "babel-loader",
-      //   options: {
-      //     // 预设 babel 做兼容处理
-      //     presets: [
-      //       "@babel/preset-env",
-      //       {
-      //         useBuiltIns: true,
-      //         corejs: {
-      //           version: 3
-      //         },
-      //         targets: {
-      //           chrome: "60",
-      //           firefox: "60",
-      //           ie: "8"
-      //         }
-      //       }
-      //     ]
+      //   test: /\.m?js$/,
+      //   exclude: /(node_modules|bower_components)/,
+      //   use: {
+      //     loader: 'babel-loader',
+      //     options: {
+      //       presets: ['@babel/preset-env']
+      //     }
       //   }
       // },
+      {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: [
+          'thread-loader',
+          {
+            loader: 'babel-loader',   //babel-loader 开启多线程加速    但是 thread 开启与 thread 线程间的通信业耗费一些时间所有本身打包时间短的包就不需要开启多线程  一般 babel 这种就消耗时间比较长
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          },
+        ]
+      }
     ]
   },
 
