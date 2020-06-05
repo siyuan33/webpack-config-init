@@ -10,6 +10,13 @@ const htmlWebpackPlugin = require('html-webpack-plugin');  //a Class
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const workboxWebpackPlugin = require('workbox-webpack-plugin');
+/*
+  PWA: 渐进式网络开发应用程序(离线可访问)
+  workbox(from google) ==>  在 webpack 中就是使用一个库 workbox-webpack-plugin 
+
+*/
+
 
 // 设置 node 的环境变量
 process.env.NODE_ENV = "development"
@@ -132,6 +139,7 @@ module.exports = {
       // },
     ]
   },
+
   plugins: [
     // 详细的plugins
 
@@ -153,7 +161,15 @@ module.exports = {
       chunkFilename: "[id].css"
     }),
     new OptimizeCSSAssetsPlugin({}),
+    new workboxWebpackPlugin.GenerateSW({  //PWA 插件
+
+      //Whether or not the service worker should start controlling any existing clients as soon as it activates.
+      //Whether to add an unconditional call to skipWaiting() to the generated service worker. If false, then a message listener will be added instead, allowing you to conditionally call skipWaiting().
+      clientsClaim: true,
+      skipWaiting: true,
+    })
   ],
+
   mode: "development",
   // mode : "production",
 
